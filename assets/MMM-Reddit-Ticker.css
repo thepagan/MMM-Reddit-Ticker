@@ -75,22 +75,28 @@
 /* --- Ticker mode --- */
 
 .mmm-reddit-ticker {
+  --mmm-reddit-ticker-speed: 35s;
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
   line-height: 1.4;
+  contain: content;
 }
 
 .mmm-reddit-ticker-track {
   display: inline-flex;
   align-items: center;
-  gap: 0; /* important: removes seam offset */
+  gap: 0;
+  width: max-content;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
   animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
 }
 
 .mmm-reddit-ticker-content {
   display: inline-block;
+  flex: 0 0 auto;
   padding-right: 3rem;
 }
 
@@ -99,8 +105,7 @@
   animation-play-state: paused;
 }
 
-/* Move the first full copy out; second copy slides into place */
 @keyframes mmm-reddit-marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }

@@ -128,32 +128,36 @@ $sprite_url: 'https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png';
 
 .mmm-reddit-ticker {
     --mmm-reddit-ticker-speed: 35s;
-
     overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-  line-height: 1.4;
+    white-space: nowrap;
+    width: 100%;
+    line-height: 1.4;
+    contain: content;
 }
 
 .mmm-reddit-ticker-track {
     display: inline-flex;
     align-items: center;
-    gap: 0; /* important: removes seam offset */
+    gap: 0;
+    width: max-content;
     will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
     animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
 }
 
 .mmm-reddit-ticker-content {
-  display: inline-block;
-  padding-right: 3rem;
+    display: inline-block;
+    flex: 0 0 auto;
+    padding-right: 3rem;
 }
 
 /* Pause on hover */
 .mmm-reddit-ticker.pause-on-hover:hover .mmm-reddit-ticker-track {
-  animation-play-state: paused;
+    animation-play-state: paused;
 }
 
 @keyframes mmm-reddit-marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
 }
