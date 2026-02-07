@@ -87,7 +87,7 @@ config: {
 
 #### Display Type: Ticker ####
 
-![ticker]()
+![ticker](<img width="584" height="64" alt="ticker" src="https://github.com/user-attachments/assets/c9dc8288-f3b6-4ed1-aba2-c965f00b6133" />)
 
 ```
 config: {
