@@ -1,7 +1,7 @@
 /* Magic Mirror
- * Module: MMM-Reddit
+ * Module: MMM-Reddit-Ticker
  *
- * By kjb085 https://github.com/kjb085/MMM-Reddit
+ * By kjb085 https://github.com/thepagan/MMM-Reddit-Ticker
  */
 Module.register('MMM-Reddit-Ticker', {
     /**

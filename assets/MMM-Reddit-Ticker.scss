@@ -136,16 +136,16 @@ $sprite_url: 'https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png';
 }
 
 .mmm-reddit-ticker-track {
-  display: inline-flex;
-  align-items: center;
-  gap: 2rem;
-  will-change: transform;
-  animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
+    display: inline-flex;
+    align-items: center;
+    gap: 0; /* important: removes seam offset */
+    will-change: transform;
+    animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
 }
 
 .mmm-reddit-ticker-content {
   display: inline-block;
-  padding-right: 2rem;
+  padding-right: 3rem;
 }
 
 /* Pause on hover */
