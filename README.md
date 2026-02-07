@@ -27,7 +27,7 @@ Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirr
 ## Installation ##
 
 1. Run `git clone https://github.com/thepagan/MMM-Reddit-Ticker.git` in the directory `~/MagicMirror/modules`
-2. Add MMM-Reddit to your config file `~/MagicMirror/config/config.js`
+2. Add MMM-Reddit-Ticker to your config file `~/MagicMirror/config/config.js`
 
 ```
 {
