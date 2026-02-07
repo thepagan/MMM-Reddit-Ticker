@@ -451,15 +451,15 @@ Module.register('MMM-Reddit-Ticker', {
             if (this.config.showRank) parts.push(`#${idx + 1}`);
             if (this.config.showScore) parts.push(this.formatScore(post.score));
 
-            // Title
-            parts.push(this.helper.escapeHtml(post.title || ''));
-
             // Subreddit label (ticker-specific toggle falls back to showSubreddit)
             if (this.config.tickerShowSubreddit && post.subreddit) {
                 parts.push(`<span class="ticker-subreddit">r/${this.helper.escapeHtml(post.subreddit)}</span>`);
             } else if (this.config.showSubreddit && post.subreddit) {
                 parts.push(`<span class="ticker-subreddit">r/${this.helper.escapeHtml(post.subreddit)}</span>`);
             }
+
+            // Title
+            parts.push(this.helper.escapeHtml(post.title || ''));
 
             if (this.config.showAuthor && post.author) parts.push(`by ${this.helper.escapeHtml(post.author)}`);
             if (this.config.showNumComments && this.helper.argumentExists(post.num_comments)) {

@@ -107,7 +107,7 @@
 }
 
 .mmm-reddit-ticker-content {
-  color: #fff;
+  color: #f6eee9;
   font-weight: 700;
   display: inline-block;
   flex: 0 0 auto;
@@ -127,3 +127,4 @@
   0%   { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
 }
+
