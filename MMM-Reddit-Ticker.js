@@ -12,7 +12,7 @@ Module.register('MMM-Reddit', {
     	subreddit: 'all',
         type: 'hot',
         postIdList: [], // TODO: Implement this
-        displayType: 'headlines', // Options: 'headlines', 'image' (for image, if post is album, only 1st image is shown)
+        displayType: 'headlines', // Options: 'headlines', 'image', 'ticker' (ticker scrolls one-line text)
         count: 10,
         show: 5,
         width: 400, // In pixels
@@ -41,6 +41,13 @@ Module.register('MMM-Reddit', {
         maxImageHeight: 500, // In pixels
         imageQuality: 'mid-high', // Options: 'low', 'mid', 'mid-high', 'high'
         showTitle: true, // Non-configurable for text base subs
+
+        // Ticker only
+        tickerSpeed: 35,         // seconds for one full loop (smaller = faster)
+        tickerSeparator: " • ",  // between items
+        tickerPauseOnHover: true,
+        tickerShowSubreddit: true, // ticker-specific (optional)
+        tickerMaxItems: null,      // null = use `count`, or set a number
 
         // Developer only
         debug: false,
@@ -132,7 +139,7 @@ Module.register('MMM-Reddit', {
      */
     getStyles () {
         return [
-            this.file('assets/MMM-Reddit.css'),
+            this.file('assets/MMM-Reddit-Ticker.css'),
         ];
     },
 
@@ -326,7 +333,10 @@ Module.register('MMM-Reddit', {
         this.updateDom();
         this.resetStagedPosts();
 
-        if (this.config.show < this.config.count && this.hasValidPosts) {
+        // Ticker mode uses continuous CSS animation, not the post-set rotator
+        if (this.config.displayType === 'ticker') {
+            this.unsetRotateInterval();
+        } else if (this.config.show < this.config.count && this.hasValidPosts) {
             this.setRotateInterval();
         }
     },
@@ -363,7 +373,7 @@ Module.register('MMM-Reddit', {
     getDom () {
         this.log('getting dom');
         let wrapperDiv = document.createElement('div'),
-            postsDiv = document.createElement('div');
+            postsDiv = document.createElement('div'),
             headerElement = document.createElement('header'),
             sliderElement = null,
             postSets = this.postSets;
@@ -383,7 +393,11 @@ Module.register('MMM-Reddit', {
             text.innerHTML = 'LOADING';
             postsDiv.appendChild(text);
         } else {
-            sliderElement = this.getContentSlider(postSets);
+            if (this.config.displayType === 'ticker') {
+                sliderElement = this.getTicker(postSets);
+            } else {
+                sliderElement = this.getContentSlider(postSets);
+            }
 
             postsDiv.appendChild(sliderElement);
         }
@@ -391,6 +405,85 @@ Module.register('MMM-Reddit', {
         wrapperDiv.appendChild(postsDiv);
 
         return wrapperDiv;
+    },
+    /**
+     * Build a single-line scrolling ticker of posts
+     *
+     * @param  {Array} postSets
+     * @return {Element}
+     */
+    getTicker (postSets) {
+        const ticker = document.createElement('div');
+        ticker.classList.add('mmm-reddit-ticker');
+
+        // Use CSS var for speed (seconds per full loop)
+        ticker.style.setProperty('--mmm-reddit-ticker-speed', `${this.config.tickerSpeed}s`);
+
+        if (this.config.tickerPauseOnHover) {
+            ticker.classList.add('pause-on-hover');
+        }
+
+        // Flatten postSets to a single list without relying on Array.prototype.flat()
+        const posts = [];
+        if (Array.isArray(postSets)) {
+            postSets.forEach((set) => {
+                if (Array.isArray(set)) {
+                    set.forEach((p) => posts.push(p));
+                }
+            });
+        }
+
+        const maxItems = this.helper.argumentExists(this.config.tickerMaxItems)
+            ? this.config.tickerMaxItems
+            : this.config.count;
+
+        const items = posts.slice(0, maxItems).map((post, idx) => {
+            const parts = [];
+
+            // Optional metadata (reuses existing toggles)
+            if (this.config.showRank) parts.push(`#${idx + 1}`);
+            if (this.config.showScore) parts.push(this.formatScore(post.score));
+
+            // Title
+            parts.push(post.title || '');
+
+            // Subreddit label (ticker-specific toggle falls back to showSubreddit)
+            if (this.config.tickerShowSubreddit && post.subreddit) {
+                parts.push(`r/${post.subreddit}`);
+            } else if (this.config.showSubreddit && post.subreddit) {
+                parts.push(`r/${post.subreddit}`);
+            }
+
+            if (this.config.showAuthor && post.author) parts.push(`by ${post.author}`);
+            if (this.config.showNumComments && this.helper.argumentExists(post.num_comments)) {
+                parts.push(`${post.num_comments} comments`);
+            }
+            if (this.config.showGilded && post.gilded) {
+                parts.push(`★${post.gilded > 1 ? 'x' + post.gilded : ''}`);
+            }
+
+            return parts.filter((x) => !!x).join(' ');
+        });
+
+        const contentText = items.join(this.config.tickerSeparator);
+
+        const track = document.createElement('div');
+        track.classList.add('mmm-reddit-ticker-track');
+
+        // Render the content twice for seamless looping
+        const content1 = document.createElement('div');
+        content1.classList.add('mmm-reddit-ticker-content');
+        content1.textContent = contentText;
+
+        const content2 = document.createElement('div');
+        content2.classList.add('mmm-reddit-ticker-content');
+        content2.textContent = contentText;
+
+        track.appendChild(content1);
+        track.appendChild(content2);
+        ticker.appendChild(track);
+
+        return ticker;
     },
 
     /**
@@ -519,6 +612,7 @@ Module.register('MMM-Reddit', {
         if (this.config.displayType === 'image') {
             return this.createImageRow(post, postIndex);
         } else {
+            // 'ticker' uses getTicker() and should never hit row rendering, but keep fallback safe
             return this.createHeadlinetRow(post, postIndex);
         }
     },

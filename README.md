@@ -1,16 +1,24 @@
-# MMM-Reddit #
+# MMM-Reddit-Ticker #
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
+## Attribution ##
+
+This project is based on the original **[MMM-Reddit](https://github.com/mumblebaj/MMM-Reddit)** MagicMirror² module by GitHub user **[mumblebaj](https://github.com/mumblebaj)**.
+
+The original module provided the core Reddit fetching, configuration system, and headline/image display logic. This fork expands upon that work by introducing a continuous scrolling ticker display and related configuration options, while retaining compatibility with the original design and behavior.
+
+All credit for the foundational module belongs to the original author.
+
 ## Support
 If you like the module you can support my work by giving me a star or buy me a coffee.
 
-<a href="https://www.buymeacoffee.com/mumblebaj" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 45px !important;width: 180px !important;" ></a>
+<a href="https://buymeacoffee.com/thepagan" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 45px !important;width: 180px !important;" ></a>
 
-This module is used to show top level reddit info for MagicMirror².
+This module is used to show top level reddit info for MagicMirror² as a block for images and headlines, or as a continuous scrolling ticker.
 
-It is highly configurable and primarily allows users to choose between two display types, the number of posts pull from reddit, how many of those posts to display, how often to cycle through the set of posts, and how frequently to refresh posts from reddit.
+It is highly configurable and primarily allows users to choose between three display types, the number of posts pull from reddit, how many of those posts to display, how often to cycle through the set of posts, and how frequently to refresh posts from reddit.
 
 ## End User Dependencies ##
 
@@ -18,12 +26,12 @@ Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirr
 
 ## Installation ##
 
-1. Run `git clone https://github.com/mumblebaj/MMM-Reddit.git` in the directory `~/MagicMirror/modules`
+1. Run `git clone https://github.com/thepagan/MMM-Reddit-Ticker.git` in the directory `~/MagicMirror/modules`
 2. Add MMM-Reddit to your config file `~/MagicMirror/config/config.js`
 
 ```
 {
-	module: "MMM-Reddit",
+	module: "MMM-Reddit-Ticker",
 	position: "top_right",
 	config: {
     	...
@@ -39,7 +47,7 @@ Just an installation of [MagicMirror²<sup>2</sup>](https://github.com/MagicMirr
 
 ```
 config: {
-            module: "MMM-Reddit",
+            module: "MMM-Reddit-Ticker",
             position: "bottom_left",
             disabled: false,
             config: {
@@ -77,6 +85,31 @@ config: {
 }
 ```
 
+#### Display Type: Ticker ####
+
+![ticker]()
+
+```
+config: {
+    subreddit: ['television', 'science', 'nottheonion'],
+    headerType: 'chained',
+    displayType: 'ticker',
+    count: 14,
+    show: 7,
+    width: 700,
+
+    // Ticker-specific options
+    tickerSpeed: 45,            // Seconds for one full scroll loop
+    tickerSeparator: '  •  ',   // Separator between items
+    tickerPauseOnHover: true,
+
+    showScore: false,
+    showSubreddit: true,
+    colorText: false,
+    showThumbnail: false,
+}
+```
+
 ## Config Options ##
 
 #### Primary ####
@@ -85,7 +118,7 @@ Option  | Default | Description
 ------- | ------- | -------------
 `subreddit`  | `'all'` | Subreddit to pull content from.<br><br>Please enter `frontpage` to get content from the frontpage.<br>This value can also be an array of subreddits. Ex: `['funny', 'jokes', 'tifu']`
 `type`  | `hot` | Filter applied to searches.<br><br>**Options:** `hot`, `top`, `new`, `rising`, `controversial`
-`displayType` | `headlines` | Format in which the reddit posts are displayed. See below for configurations specific to each display type.<br><br>**Options:** `headlines`, `image`
+`displayType` | `headlines` | Format in which the reddit posts are displayed. See below for configurations specific to each display type.<br><br>**Options:** `headlines`, `image`, `ticker`
 `count` | `10` | Number of posts to get from reddit.
 `show` | `5` | Number of posts to be displayed at a time.<br><br>If this number is lower than `count`, then the posts will be rotated after a given number of seconds configured with `rotateInterval`.
 `width` | `400` | Number of pixels wide the module will take up on the display.
@@ -124,3 +157,13 @@ Option  | Default | Description
 Option  | Default | Description
 ------- | ------- | -------------
 `showThumbnail` | `false` | Show the thumbnails of posts. This attribute is also included in `showAll`.
+
+#### Ticker Only ####
+
+Option  | Default | Description
+------- | ------- | -----------
+`tickerSpeed` | `35` | Number of seconds for one full ticker scroll loop. Lower values scroll faster.
+`tickerSeparator` | `' • '` | Text separator between ticker items.
+`tickerPauseOnHover` | `true` | Pause the ticker animation when the mouse hovers over it.
+`tickerShowSubreddit` | `true` | Show the subreddit name (`r/subreddit`) for each ticker item.
+`tickerMaxItems` | `null` | Maximum number of posts to include in the ticker. Defaults to `count` when `null`.
