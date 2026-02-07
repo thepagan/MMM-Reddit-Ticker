@@ -151,6 +151,10 @@ Module.register('MMM-Reddit-Ticker', {
     start () {
         Log.info(`Starting module: ${this.name}`);
 
+        // Make DOM ids unique per module instance to avoid conflicts (and flicker) when multiple modules exist
+        this.domElements.wrapperId = `mmm-reddit-wrapper-${this.identifier}`;
+        this.domElements.sliderId = `mmm-reddit-slider-${this.identifier}`;
+
         this.nodeHelperConfig = {
             subreddit: this.config.subreddit,
             type: this.config.type,
@@ -380,7 +384,10 @@ Module.register('MMM-Reddit-Ticker', {
 
 
         wrapperDiv.id = this.domElements.wrapperId;
-        wrapperDiv.style.width = this.config.width + 'px';
+        // In ticker mode, let the region constrain width (avoids margin math + reduces compositor reflow)
+        wrapperDiv.style.width = (this.config.displayType === 'ticker')
+            ? '100%'
+            : (this.config.width + 'px');
 
         if (!this.hasValidPosts) {
             let text = document.createElement('div');
@@ -445,16 +452,16 @@ Module.register('MMM-Reddit-Ticker', {
             if (this.config.showScore) parts.push(this.formatScore(post.score));
 
             // Title
-            parts.push(post.title || '');
+            parts.push(this.helper.escapeHtml(post.title || ''));
 
             // Subreddit label (ticker-specific toggle falls back to showSubreddit)
             if (this.config.tickerShowSubreddit && post.subreddit) {
-                parts.push(`r/${post.subreddit}`);
+                parts.push(`<span class="ticker-subreddit">r/${this.helper.escapeHtml(post.subreddit)}</span>`);
             } else if (this.config.showSubreddit && post.subreddit) {
-                parts.push(`r/${post.subreddit}`);
+                parts.push(`<span class="ticker-subreddit">r/${this.helper.escapeHtml(post.subreddit)}</span>`);
             }
 
-            if (this.config.showAuthor && post.author) parts.push(`by ${post.author}`);
+            if (this.config.showAuthor && post.author) parts.push(`by ${this.helper.escapeHtml(post.author)}`);
             if (this.config.showNumComments && this.helper.argumentExists(post.num_comments)) {
                 parts.push(`${post.num_comments} comments`);
             }
@@ -473,16 +480,15 @@ Module.register('MMM-Reddit-Ticker', {
         // Render the content twice for seamless looping
         const content1 = document.createElement('div');
         content1.classList.add('mmm-reddit-ticker-content');
-        content1.textContent = contentText;
+        content1.innerHTML = contentText;
 
         const content2 = document.createElement('div');
         content2.classList.add('mmm-reddit-ticker-content');
-        content2.textContent = contentText;
+        content2.innerHTML = contentText;
 
         track.appendChild(content1);
         track.appendChild(content2);
         ticker.appendChild(track);
-
         return ticker;
     },
 
@@ -496,7 +502,9 @@ Module.register('MMM-Reddit-Ticker', {
         this.log(['deleting wrapper']);
         if (wrapperExists) {
             let wrapperDiv = document.getElementById(this.domElements.wrapperId);
-
+            if (!wrapperDiv) {
+                return;
+            }
             wrapperDiv.remove();
         }
     },
@@ -1044,6 +1052,25 @@ Module.register('MMM-Reddit-Ticker', {
          */
         isScalar (variable) {
             return (/boolean|number|string/).test(typeof variable);
+        },
+
+        /**
+         * Escape a string for safe HTML insertion.
+         *
+         * @param {String} str
+         * @return {String}
+         */
+        escapeHtml (str) {
+            if (typeof str !== 'string') {
+                str = String(str ?? '');
+            }
+
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         },
     }
 });

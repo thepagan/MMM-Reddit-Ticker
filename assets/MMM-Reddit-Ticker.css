@@ -75,11 +75,16 @@
 /* --- Ticker mode --- */
 
 .mmm-reddit-ticker {
+  background-color: #ad141f;
+  color: #ffffff;
+  font-weight: 700;
   --mmm-reddit-ticker-speed: 35s;
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
   line-height: 1.4;
+  box-sizing: border-box;
+  padding: 6px 10px;
 
   /* Help prevent flicker when video modules (e.g., RTSP) create new compositor layers */
   contain: layout paint;
@@ -102,11 +107,17 @@
 }
 
 .mmm-reddit-ticker-content {
+  color: #fff;
+  font-weight: 700;
   display: inline-block;
   flex: 0 0 auto;
   padding-right: 3rem;
 }
-
+.mmm-reddit-ticker .ticker-subreddit,
+#mmm-reddit-slider .table td.details .subreddit {
+  color: #e67a28;
+  font-weight: 700;
+}
 /* Pause on hover */
 .mmm-reddit-ticker.pause-on-hover:hover .mmm-reddit-ticker-track {
   animation-play-state: paused;
