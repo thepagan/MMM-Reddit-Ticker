@@ -91,12 +91,11 @@ config: {
 
 ```
 config: {
-    subreddit: ['television', 'science', 'nottheonion'],
+    subreddit: ['news', 'worldnews', 'politics'],
     headerType: 'chained',
     displayType: 'ticker',
     count: 14,
     show: 7,
-    width: 700,
 
     // Ticker-specific options
     tickerSpeed: 45,            // Seconds for one full scroll loop
@@ -121,7 +120,7 @@ Option  | Default | Description
 `displayType` | `headlines` | Format in which the reddit posts are displayed. See below for configurations specific to each display type.<br><br>**Options:** `headlines`, `image`, `ticker`
 `count` | `10` | Number of posts to get from reddit.
 `show` | `5` | Number of posts to be displayed at a time.<br><br>If this number is lower than `count`, then the posts will be rotated after a given number of seconds configured with `rotateInterval`.
-`width` | `400` | Number of pixels wide the module will take up on the display.
+`width` | `400` | Width of the module in pixels for `headlines` and `image` display types. Ignored when `displayType` is `ticker`, which always fills the available region width.
 `updateInterval` | `15` | Number of minutes until the set of current posts gets refreshed from reddit.
 `rotateInterval` | `30` | Number of seconds until the posts currently being displayed is substituted by the subsequent set.
 `characterLimit` | `false` | Set a character limit for post titles. Titles that are truncated will have "..." appended to the title to indicate it.
