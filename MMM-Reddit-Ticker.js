@@ -3,7 +3,7 @@
  *
  * By kjb085 https://github.com/kjb085/MMM-Reddit
  */
-Module.register('MMM-Reddit', {
+Module.register('MMM-Reddit-Ticker', {
     /**
      * List of default configurations
      * @type {Object}
