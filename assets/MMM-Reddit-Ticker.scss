@@ -1,128 +1,76 @@
-$sprite_url: 'https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png';
+#mmm-reddit-slider .table td {
+    font-size: 20px;
+    vertical-align: middle; }
+#mmm-reddit-slider .table td:not(:last-child) {
+    padding-right: 10px; }
+#mmm-reddit-slider .table td .rank {
+    width: 35px;
+    text-align: center; }
+#mmm-reddit-slider .table td .rank.colored {
+    color: rgba(198, 198, 198, 0.5); }
+#mmm-reddit-slider .table td .score {
+    width: 50px;
+    text-align: center; }
+#mmm-reddit-slider .table td .score.colored {
+    color: #FF8B60; }
+#mmm-reddit-slider .table td.title {
+    width: 100%;
+    line-height: 1.5; }
+#mmm-reddit-slider .table td.details {
+    font-size: 14px;
+    line-height: 1.5; }
+#mmm-reddit-slider .table td.details .author {
+    float: right; }
+#mmm-reddit-slider .table td.details .subreddit {
+    float: right;
+    margin-left: 10px; }
+#mmm-reddit-slider .table td.details .gilded {
+    margin-left: 10px; }
+#mmm-reddit-slider .table td.details .gilded:before {
+    display: inline-block;
+    content: '';
+    background-image: url("https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png");
+    background-position: -84px -1647px;
+    background-repeat: no-repeat;
+    height: 14px;
+    width: 13px;
+    margin-right: 2px;
+    vertical-align: -3px; }
 
-#mmm-reddit-slider {
+#mmm-reddit-slider .table .image-row:not(:last-child) {
+    margin-bottom: 10px; }
 
-    .table {
+#mmm-reddit-slider .table .image-row .feature-image {
+    width: 100%; }
+#mmm-reddit-slider .table .image-row .feature-image .image-container {
+    width: 100%;
+    overflow-y: hidden; }
+#mmm-reddit-slider .table .image-row .feature-image .image-container img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto; }
 
-        td {
-            font-size: 20px;
-            vertical-align: middle;
+#mmm-reddit-slider .table .text-row:not(:last-child) {
+    border-bottom: 1px solid rgba(211, 211, 211, 0.5);
+    margin-bottom: 5px; }
 
-            &:not(:last-child) {
-                padding-right: 10px;
-            }
+#mmm-reddit-slider .table .text-row .thumbnail div {
+    background-image: url("https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png");
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 70px; }
 
-            .rank {
-                width: 35px;
-                text-align: center;
+#mmm-reddit-slider .table .text-row .thumbnail .default {
+    background-position: 0px -1099px; }
 
-                &.colored {
-                    color: rgba(198,198,198, .5);
-                }
-            }
+#mmm-reddit-slider .table .text-row .thumbnail .image {
+    background-position: 0px -1043px; }
 
-            .score {
-                width: 50px;
-                text-align: center;
+#mmm-reddit-slider .table .text-row .thumbnail .self {
+    background-position: 0px -1267px; }
 
-                &.colored {
-                    color: #FF8B60;
-                }
-            }
-
-            &.title {
-                width: 100%;
-                line-height: 1.5;
-            }
-
-            &.details {
-                font-size: 14px;
-                line-height: 1.5;
-
-                .author {
-                    float: right;
-                }
-
-                .subreddit {
-                    float: right;
-                    margin-left: 10px;
-                }
-
-                .gilded {
-                    margin-left: 10px;
-
-                    &:before {
-                        display: inline-block;
-                        content: '';
-                        background-image: url($sprite_url);
-                        background-position: -84px -1647px;
-                        background-repeat: no-repeat;
-                        height: 14px;
-                        width: 13px;
-                        margin-right: 2px;
-                        vertical-align: -3px;
-                    }
-                }
-            }
-        }
-
-        .image-row {
-
-            &:not(:last-child) {
-                margin-bottom: 10px;
-            }
-
-            .feature-image {
-                width: 100%;
-
-                .image-container {
-                    width: 100%;
-                    overflow-y: hidden;
-
-                    img {
-                        max-width: 100%;
-                        display: block;
-                        margin: 0 auto;
-                    }
-                }
-            }
-        }
-
-        .text-row {
-
-            &:not(:last-child) {
-                border-bottom: 1px solid rgba(211,211,211, 0.5);
-                margin-bottom: 5px;
-            }
-
-            .thumbnail {
-
-                div {
-                    background-image: url($sprite_url);
-                    background-repeat: no-repeat;
-                    height: 50px;
-                    width: 70px;
-                }
-
-                .default {
-                    background-position: 0px -1099px;
-                }
-
-                .image {
-                    background-position: 0px -1043px;
-                }
-
-                .self {
-                    background-position: 0px -1267px;
-                }
-
-                .nsfw {
-                    background-position: 0px -1155px;
-                }
-            }
-        }
-    }
-}
+#mmm-reddit-slider .table .text-row .thumbnail .nsfw {
+    background-position: 0px -1155px; }
 
 /* --- Ticker mode --- */
 
@@ -132,7 +80,13 @@ $sprite_url: 'https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png';
     white-space: nowrap;
     width: 100%;
     line-height: 1.4;
-    contain: content;
+
+    /* Help prevent flicker when video modules (e.g., RTSP) create new compositor layers */
+    contain: layout paint;
+    isolation: isolate;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 .mmm-reddit-ticker-track {
@@ -143,6 +97,7 @@ $sprite_url: 'https://www.redditstatic.com/sprite-reddit.bTLvdEETokI.png';
     will-change: transform;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
+    perspective: 1000px;
     animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
 }
 

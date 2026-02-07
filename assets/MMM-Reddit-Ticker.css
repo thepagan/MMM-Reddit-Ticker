@@ -80,7 +80,13 @@
   white-space: nowrap;
   width: 100%;
   line-height: 1.4;
-  contain: content;
+
+  /* Help prevent flicker when video modules (e.g., RTSP) create new compositor layers */
+  contain: layout paint;
+  isolation: isolate;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .mmm-reddit-ticker-track {
@@ -91,6 +97,7 @@
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
+  perspective: 1000px;
   animation: mmm-reddit-marquee var(--mmm-reddit-ticker-speed, 35s) linear infinite;
 }
 
